@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>  
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Card</title>
+    <script src="/lib/jquery/jquery-3.6.4.min.js"></script>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="style.css" rel="stylesheet">
+    <link href="mystyle/homepage.css" rel="stylesheet" >
+    <link href="mystyle/add-product.css" rel="stylesheet" >
+
+    <!-- Gán lại link bootstrap, fontawesome ở đây -->
+    <link href="/lib/fontawesome/css/fontawesome.min.css" rel="stylesheet">
+    <link href="/lib/fontawesome/css/brands.min.css" rel="stylesheet">
+    <link href="/lib/fontawesome/css/solid.min.css" rel="stylesheet">
+    <link href="/lib/fontawesome/css/regular.min.css" rel="stylesheet">
+    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="myjs/localstore.js"></script>
+</head>
+<body>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <a href="../../index.html">
+                        <img src="images/logo.png" alt="logo">
+                    </a>    
+                </span>
+
+                <div class="text header-text">
+                    <span class="name">Master Card</span>
+                    <span class="profession">Thẻ tín dụng</span>
+                </div>
+            </div>
+            <i class="bx bx-chevron-right toggle"></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu">
+                <ul class="menu-links">
+                    <li class="search-box">
+                            <i class='bx bx-search icon'></i>
+                            <input oninput="inputCard()" onclick="hideCard()" id="search-card" type="search" placeholder="Search..." style="font-weight: 500">
+                    
+                    </li>             
+                    <li class="links">
+                        <a href="../product-management/index.html">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="text nav-text">Trang chủ</span>
+                        </a>
+                    </li>             
+                    <li class="links">
+                        <a href="">
+                            <i class='bx bx-bell icon'></i>
+                            <span class="text nav-text">Thông báo</span>
+                        </a>
+                    </li>             
+                    <li class="links">
+                        <button id="btn-add-product" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-add-new-product">
+                        <span class="add">+ Thêm mới</span>
+                        </button>           
+                    </li>                                                   
+               </ul>            
+            </div>
+            
+            <div class="bottom-content">
+                <li class="logout-mode">
+                    <div id="btn-add-product" data-bs-toggle="modal" data-bs-target="#modal-confirm-logout" style="display: flex;">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">Đăng xuất</span>
+                    </div>         
+                </li> 
+
+                <li class="mode dm">
+                    <div class="moon-sun">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>    
+                    <span class="mode-text text">Dark Mode</span>
+               
+                
+                    <div class="toggle-switch">
+                        <i class='bx bxs-toggle-left icondm icon'></i>
+                    </div>
+                </li>    
+            </div>  
+        </div>
+    </nav>
+
+    <section class="home">
+        <div class="home-text">
+            <table style="margin: 5px; border: 1px solid; width: 100%; height: 500px ">
+                <tr>
+                    <td>#</td>
+                    <td>Art</td>
+                    <td>Home</td>
+                    <td>Album</td>
+                    <td>Date Added</td>
+                    <td><i class="bi bi-play-circle-fill"></i></td>
+                </tr>
+                <tr>
+                    <td>${item.id}</td>
+                    <td>${item.imageUrl}</td>
+                    <td>${item.name}</td>
+                    <td>${item.singer}</td>
+                    <td>${item.musician}</td>
+                    <td>${item.songUrl}</td>
+                    <td>${item.albumId}</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <nav aria-label="navigation example page-nav" >
+        <ul class="pagination justify-content-center">
+          <li onclick="page()" class="page-item disabled"><a class="page-link">Previous</a></li>
+          <li onclick="page()" class="page-item"><a class="page-link" href="#" style="background: #0000ffc7; color: white;">1</a></li>
+          <li onclick="page()" class="page-item"><a class="page-link" href="#">2</a></li>
+          <li onclick="page()" class="page-item"><a class="page-link" href="#">3</a></li>
+          <li onclick="page()" class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+
+    <div class="modal fade" id="modal-add-new-product" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="modal-title">Thêm thẻ mới</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background-color: #f9f8fb;">
+                <form id="form-add-product" action="" method="post">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label" style="margin-top: 10px;">Tên khách hàng</label>
+                        <input class="form-control" type="text" name="name" id="client-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label inputcode">Mã thẻ</label>
+                        <input class="form-control" type="text" name="code" id="code-part1" maxlength="4" required onkeyup="if(this.value.length == this.maxLength) document.getElementById('code-part2').focus()">-
+                        <input class="form-control" type="text" name="code" id="code-part2" maxlength="4" required onkeyup="if(this.value.length == this.maxLength) document.getElementById('code-part3').focus()">-
+                        <input class="form-control" type="text" name="code" id="code-part3" maxlength="4" required onkeyup="if(this.value.length == this.maxLength) document.getElementById('code-part4').focus()">-
+                        <input class="form-control" type="text" name="code" id="code-part4" maxlength="4" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              <button onclick="saveCard()" id="btn-savecard" type="button" class="btn btn-primary ps-5 pe-5">Lưu</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modal-edit-product" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modal-title">Sửa thẻ: <span class="edit-code" id="edit-code" style="color: blue;"></span></h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="background-color: #f9f8fb;">
+              <form id="form-add-product" action="" method="post">
+                  <div class="mb-3">
+                      <label for="formFile" class="form-label" style="margin-top: 10px;">Tên khách hàng</label>
+                      <input class="form-control" type="text" name="name" id="client-name-update" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="formFile" class="form-label inputcode">Mã thẻ</label>
+                      <input class="form-control" type="text" name="code" id="code-edit-part1" maxlength="4" required onkeyup="if(this.value.length == this.maxLength) document.getElementById('code-edit-part2').focus()">-
+                      <input class="form-control" type="text" name="code" id="code-edit-part2" maxlength="4" required onkeyup="if(this.value.length == this.maxLength) document.getElementById('code-edit-part3').focus()">-
+                      <input class="form-control" type="text" name="code" id="code-edit-part3" maxlength="4" required onkeyup="if(this.value.length == this.maxLength) document.getElementById('code-edit-part4').focus()">-
+                      <input class="form-control" type="text" name="code" id="code-edit-part4" maxlength="4" required>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button onclick="saveEditCard()" id="btn-savecard" type="button" class="btn btn-primary ps-5 pe-5">Lưu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div id="modal-confirm-delete" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Xác nhận xóa</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Bạn có muốn xóa thẻ : <span class="remove-code" id="remove-code"></span>?</p>
+              <p style="display: none;" id="code-confirm-remove"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              <button onclick="clickConfirmRemove()" type="button" class="btn btn-danger">Xác nhận</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div id="modal-confirm-logout" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body">
+              <p>Bạn có muốn đăng xuất ?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
+              <button type="button" class="btn btn-primary yes">Có</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script src="myjs/card-product.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
+
+
+ 
