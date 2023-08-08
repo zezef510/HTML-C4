@@ -1,4 +1,4 @@
-function save(){
+function addSong(){
     let data = {
         id  : document.getElementById("id").value,
         name : document.getElementById("name").value,
@@ -9,62 +9,91 @@ function save(){
 
         album : {
             id : document.getElementById('albumId').value},
-        // userId : document.getElementById('userId').value,
-
 
     }
     console.log(data)
 
-
-    const token = localStorage.getItem('token')
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-
-    axios.post(apiUrl,data).then(res => {
-        axios.get(apiUrl).then((res)=>{
-            getAll()
+    if (data.name === "" || data.singer === "" || data.musician === "" || data.songUrl  === "" || data.imageUrl === "" ){
+        alert("Vui lòng nhập đủ trường")
+    }else if (data.album.id === ""){
+        alert("Vui long chon album")
+    }
+    else {
+        axios.post(apiUrl, data).then(res => {
+            axios.get(apiUrl).then((res) => {
+                loadHome()
+            })
         })
-    })
+    }
 }
-async function showFromSave(){
+    async function showFromSave() {
+        let tableBody = document.querySelector('.table__body');
+        tableBody.style.width = "50%";
 
-    const resSong = await axios.get('http://localhost:3000/songs');
-    let data = resSong.data;
-    let lastId = data[data.length - 1].id;
-    console.log(lastId)
-    let str = `
-           <label for="id"></label>
-           <input type="hidden" id="id" value="${lastId + 1}">
-        <label for="name">Ten bai hat</label>
-        <input type="text" id="name">
-        <label for="singer">Singer</label>
-        <input type="text" id="singer">
-        <label for="musician">Nhac si</label>
-        <input type="text" id="musician">
-        <label for="songUrl"> Bai hat</label>
-        <input type="text" id="songUrl">
-        <label for="imageUrl">Anh bai hat</label>
-        <input type="text" id="imageUrl">
-        
-        <select id="albumId"></select>
-        
-        
+        const resSong = await axios.get('http://localhost:3000/songs');
+        let data = resSong.data;
+        console.log(data)
+        let lastId = data[data.length - 1].id || 1
+        console.log(lastId)
+        let str = ``
+        str = ` 
+        <form>
+            <table>
+<!--            <h1 style="width: 200px">Tạo bài hát mới</h1>-->
+                 <tr>
+                    <th colspan="2" style="font-size: 20px">Tạo bài hát mới</th>
+                </tr>
+                <tr>
+                    <th colspan="2"><input type="hidden" id="id" value="${lastId + 1}"></th>
+                </tr>
+                <tr>
+                    <th style="width: 200px"><label for="name" style="font-size: 20px">Tên bài hát:</label></th>
+                    <th>  <input type="text" class="input-text" id="name" required></th>
+                </tr>
+                <tr>
+                    <th><label for="singer" style="font-size: 20px">Ca sĩ:</label></th>
+                    <th><input type="text" class="input-text" id="singer" required></th>
+                </tr>
+                <tr>
+                    <th><label for="musician" style="font-size: 20px">Nhạc sĩ:</label></th>
+                    <th><input type="text" class="input-text" id="musician" required></th>
+                </tr>
+                <tr>
+                    <th><label for="songUrl" style="font-size: 20px">Bài hát:</label></th>
+                    <th> <input type="text" class="input-text" id="songUrl" required></th>
+                </tr>
+                <tr>
+                    <th><label for="imageUrl" style="font-size: 20px">Ảnh:</label></th>
+                    <th> <input type="text" class="input-text" id="imageUrl" required></th>
+                </tr>
+                <tr>
+                    <th><label for="albumId" style="font-size: 20px">Album:</label></th>
+                    <th>
+                        <select id="albumId" required ></select>
+                    </th>
+                </tr>
+                <tr>
 
-    
-        <button onclick="save()">Save</button>`
+                    <th colspan="2"><button type="submit" class="btn btn-primary btn-lg btn-block"   onclick="addSong()">Thêm</button></th>
+                </tr>
+               
+                </table>
+            </form>
+    `
 
-    const album = await axios.get('http://localhost:3000/album');
-    let albumData = album.data;
+        const album = await axios.get('http://localhost:3000/albums');
+        let albumData = album.data;
 
-    let optionAlbum = `<option value="">Select Album</option>`
-    for (const item of albumData) {
-        optionAlbum += `    
+        let optionAlbum = `<option value="">Chọn Album</option>`
+        for (const item of albumData) {
+            optionAlbum += `    
                     <option value="${item.id}">${item.name}</option>
                      `
+        }
+
+        document.getElementById('display').innerHTML = str
+        // document.getElementById(`playlistId`).innerHTML = optionClass;
+        document.getElementById(`albumId`).innerHTML = optionAlbum;
+
     }
 
-    document.getElementById('display').innerHTML = str
-    // document.getElementById(`playlistId`).innerHTML = optionClass;
-    document.getElementById(`albumId`).innerHTML = optionAlbum;
-
-
-}
